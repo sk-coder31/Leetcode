@@ -18,9 +18,10 @@ class Solution {
                 str.append(st.pop());
             }
         }
-        while(!st.isEmpty()){
-            str.append(st.pop());
-        }
+        // // 
+        // while(!st.isEmpty()){
+        // //     str.append(st.pop());
+        // // }
         return str.toString();
     }
 }
