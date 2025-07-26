@@ -12,7 +12,7 @@ class Solution {
             len--;
         }
 
-        // Check for 32-bit integer overflow
+        
         if (num < Integer.MIN_VALUE || num > Integer.MAX_VALUE) return 0;
         return (int) num;
     }
