@@ -4,12 +4,10 @@ class Solution {
         String[] arr2 = version2.split("\\.");
         int i = 0;
         int j = 0;
-        // System.out.println(Arrays.toString(arr1)+" "+Arrays.toString(arr2));
         while(i < arr1.length && j < arr2.length){
             int n = Integer.parseInt(arr1[i]);
             int m = Integer.parseInt(arr2[i]);
             int cmp = Integer.compare(n,m);
-            // System.out.println(cmp);
             if(cmp == 0){
                 i++;
                 j++;
