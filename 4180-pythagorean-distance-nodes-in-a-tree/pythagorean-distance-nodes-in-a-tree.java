@@ -1,8 +1,6 @@
 class Solution {
     public int specialNodes(int n, int[][] edges, int x, int y, int z) {
-        for (int[] i : edges) {
-            System.out.println(Arrays.toString(i));
-        }
+        
         List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             adj.add(new ArrayList<>());
@@ -42,28 +40,25 @@ class Solution {
         return arr[0] * arr[0] + arr[1] * arr[1] == arr[2] * arr[2];
     }
 
-    public List<Integer> getDistance(int n, int x, List<List<Integer>> adj) {
-        List<Integer> dist = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            dist.add(0);
-        }
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[] { x, 0 });
-        boolean[] visited = new boolean[n];
-        visited[x] = true;
+    public List<Integer> getDistance(int n, int start, List<List<Integer>> adj) {
+
+        List<Integer> dist = new ArrayList<>(Collections.nCopies(n, -1));
+
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+        dist.set(start, 0);
+
         while (!q.isEmpty()) {
-            int size = q.size();
-            for (int i = 0; i < size; i++) {
-                int[] node = q.poll();
-                for (int adj_nodes : adj.get(node[0])) {
-                    if (!visited[adj_nodes]) {
-                        dist.set(adj_nodes, node[1] + 1);
-                        q.add(new int[]{adj_nodes,node[1]+1});
-                        visited[adj_nodes] = true;
-                    }
+            int node = q.poll();
+
+            for (int nei : adj.get(node)) {
+                if (dist.get(nei) == -1) {
+                    dist.set(nei, dist.get(node) + 1);
+                    q.add(nei);
                 }
             }
         }
         return dist;
     }
+
 }
