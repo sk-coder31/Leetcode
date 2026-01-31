@@ -15,7 +15,7 @@ class Solution {
         int[] total_avg = calculate_sum(root,0);
         int sum = total_avg[0];
         int size = total_avg[1];
-        System.out.println(Arrays.toString(total_avg));
+        // System.out.println(Arrays.toString(total_avg));
         if((sum/size)==root.val){
             count++;
         }
