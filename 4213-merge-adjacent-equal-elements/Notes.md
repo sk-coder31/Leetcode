@@ -1,0 +1,1 @@
+<h2>merge-adjacent-equal-elements Notes</h2><hr>[ Time taken: 40 m 26 s ]
