@@ -29,7 +29,9 @@ class Solution {
             helper(i,j+1,nums1,nums2,k));
             
         long takeNext = helper(i+1, j+1, nums1, nums2, k-1);
-        long take = 1L * nums1[i] * nums2[j] + takeNext;
+        long take = (takeNext == mod)
+                ? mod
+                : 1L * nums1[i] * nums2[j] + takeNext;
 
         return memo[i][j][k] = Math.max(skip,take);
     }
