@@ -1,8 +1,6 @@
 class Solution {
     public int minFlips(String s) {
         int size = s.length();
-        String str1 = "";//01010101
-        String str2 = "";//10101010
         int i = 0;
         int j = 0;
         int res1 = 0;
