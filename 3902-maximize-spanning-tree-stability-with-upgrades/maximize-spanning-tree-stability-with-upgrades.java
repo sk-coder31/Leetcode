@@ -1,100 +1,6 @@
-class DSU {
-    int[] parent;
-    int[] rank;
-
-    public DSU(int n) {
-        parent = new int[n];
-        rank = new int[n];
-
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            rank[i] = 1;
-        }
-    }
-
-    public int find(int x) {
-        if (x == parent[x]) {
-            return x;
-        }
-        return parent[x] = find(parent[x]);
-    }
-
-    public boolean union(int x, int y) {
-        int xParent = find(x);
-        int yParent = find(y);
-
-        if (xParent == yParent) {
-            return false;
-        }
-
-        if (rank[xParent] > rank[yParent]) {
-            parent[yParent] = xParent;
-        } else if (rank[xParent] < rank[yParent]) {
-            parent[xParent] = yParent;
-        } else {
-            parent[xParent] = yParent;
-            rank[yParent]++;
-        }
-
-        return true;
-    }
-}
-
 class Solution {
-
-    private boolean check(int n, int[][] edges, int k, int mid) {
-        DSU dsu = new DSU(n);
-
-        List<int[]> upgradeCandidates = new ArrayList<>();
-
-        for (int[] edge : edges) {
-            int u = edge[0];
-            int v = edge[1];
-            int s = edge[2];
-            int m = edge[3];
-
-            if (m == 1) {
-                if (s < mid) {
-                    return false;
-                }
-                dsu.union(u, v);
-            } else {
-                if (s >= mid) {
-                    dsu.union(u, v);
-                } else if (2 * s >= mid) {
-                    upgradeCandidates.add(new int[]{u, v});
-                }
-            }
-        }
-
-        for (int[] edge : upgradeCandidates) {
-            int u = edge[0];
-            int v = edge[1];
-
-            if (dsu.find(u) != dsu.find(v)) {
-                if (k <= 0) {
-                    return false;
-                }
-                dsu.union(u, v);
-                k--;
-            }
-        }
-
-        int root = dsu.find(0);
-
-        for (int node = 1; node < n; node++) {
-            if (dsu.find(node) != root) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public int maxStability(int n, int[][] edges, int k) {
-
         DSU dsu = new DSU(n);
-
         for (int[] edge : edges) {
             int u = edge[0];
             int v = edge[1];
@@ -107,21 +13,105 @@ class Solution {
                 dsu.union(u, v);
             }
         }
-
-        int result = -1;
-        int l = 1;
-        int r = (int)2e5;
-
-        while (l <= r) {
-            int mid = l + (r - l) / 2;
-
-            if (check(n, edges, k, mid)) {
-                result = mid;
-                l = mid + 1;
+        int low = 1;
+        int high = (int) 2e5;
+        int res = -1;
+        while (low <= high) {
+            int mid = (low + (high - low) / 2);
+            if (helper(n, edges, k, mid)) {
+                res = mid;
+                low = mid + 1;
             } else {
-                r = mid - 1;
+                high = mid - 1;
             }
         }
-        return result;
+        return res;
+    }
+
+    public boolean helper(int n, int[][] edges, int k, int mid) {
+        DSU dsu = new DSU(n);
+        int[][] sorted = edges.clone();
+        Arrays.sort(sorted, (a, b) -> b[3] - a[3]);
+        List<int[]> up = new ArrayList<>();
+        for (int i = 0; i < edges.length; i++) {
+            int u = sorted[i][0];
+            int v = sorted[i][1];
+            int s = sorted[i][2];
+            int flag = sorted[i][3];
+            if (dsu.find(u) == dsu.find(v)) {
+                continue; 
+            }
+            if (flag == 1) {
+                if (s >= mid) {
+                    dsu.union(u, v);
+                } else {
+                    return false;
+                }
+            } else if (flag == 0) {
+                if (s >= mid) {
+                    dsu.union(u, v);
+                    continue;
+                } else if (2 * s >= mid ) {
+                    up.add(sorted[i]);
+                }
+            }
+        }
+        for (int[] arr : up) {
+            int u = arr[0];
+            int v = arr[1];
+            if (dsu.find(u) != dsu.find(v)) {
+                if (k <= 0) {
+                    return false;
+                }
+                dsu.union(u, v);
+                k--;
+            }
+        }
+        int check = dsu.find(0);
+        for (int i = 1; i < n; i++) {
+            if (check != dsu.find(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class DSU {
+    int[] parent;
+    int[] rank;
+
+    public DSU(int n) {
+        this.parent = new int[n];
+        this.rank = new int[n];
+        Arrays.fill(rank, 1);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    public int find(int node) {
+        if (parent[node] == node) {
+            return node;
+        }
+        return parent[node] = find(parent[node]);
+    }
+
+    public boolean union(int u, int v) {
+        int p_u = find(u);
+        int p_v = find(v);
+
+        if (p_u == p_v) {
+            return false;
+        }
+        if (rank[p_u] < rank[p_v]) {
+            parent[p_u] = p_v;
+        } else if (rank[p_u] > rank[p_v]) {
+            parent[p_v] = p_u;
+        } else {
+            parent[p_v] = p_u;
+            rank[p_u]++;
+        }
+        return true;
     }
 }
